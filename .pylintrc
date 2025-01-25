@@ -1,0 +1,8 @@
+[MESSAGES CONTROL]
+disable = unknown-option-value,
+        broad-exception-caught,
+        attribute-defined-outside-init
+[MASTER]
+init-hook="from pylint.config import find_default_config_files; import os, sys; sys.path.append(os.path.join(os.path.dirname(next(find_default_config_files())), ''))"
+[FORMAT]
+max-line-length=100
