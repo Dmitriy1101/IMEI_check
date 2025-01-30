@@ -1,0 +1,20 @@
+services:
+  public_api:
+    build: .
+    image: back/test_api:latest
+    container_name: TestAPI
+    env_file:
+      - ./.env
+    environment:
+      TYPE_ENV: docker
+    command: "uvicorn asgi:app --host 0.0.0.0 --port 58485"
+    restart: always
+    ports:
+      - "58485:58485"
+    networks:
+      - redis
+
+networks:
+  redis:
+    external: true
+    name: redis

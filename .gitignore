@@ -1,1 +1,4 @@
 **/.imei_env
+**/**.ipynb
+**/.env
+**/__pycache__
