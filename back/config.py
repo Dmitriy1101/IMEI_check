@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     DATABASE_PORT: str
     DATABASE_DB: str
 
-    TOKEN_SANDBOX: str = os.environ.get("TOKEN_SANDBOX")
-    TOKEN_LIVE: str = os.environ.get("TOKEN_LIVE")
+    TOKEN_SANDBOX: str = os.environ.get("TOKEN_SANDBOX", "")
+    TOKEN_LIVE: str = os.environ.get("TOKEN_LIVE", "")
     DB_SCHEMA: str = os.environ.get("DB_SCHEMA", "backend_fastapi_test")
 
     TEST_TOKEN: str = (

@@ -11,15 +11,13 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from back.config import settings
+from back.db.base import Base
 
-AuthBase = declarative_base()
 
-
-class ApiToken(AuthBase):
+class ApiToken(Base):
     """Table storing authentication tokens."""
 
     __tablename__ = "api_token"
@@ -33,7 +31,7 @@ class ApiToken(AuthBase):
     permissions = relationship("ApiPermissionToken", back_populates="token")
 
 
-class ApiPermissionCodes(AuthBase):
+class ApiPermissionCodes(Base):
     """Table storing types of pi access parameters."""
 
     __tablename__ = "api_permission_codes"
@@ -58,7 +56,7 @@ class ApiPermissionCodes(AuthBase):
     tokens = relationship("ApiPermissionToken", back_populates="permission_code")
 
 
-class ApiPermissionToken(AuthBase):
+class ApiPermissionToken(Base):
     """TABLE linking access type to authentication token."""
 
     __tablename__ = "api_permission_token"

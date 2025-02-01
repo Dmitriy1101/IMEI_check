@@ -6,13 +6,14 @@ Main database connection objects:
 
 """
 
-from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from back.config import settings
 
-DB: str = (
-    f"postgresql+psycopg2://{settings.DATABASE_USER}:\
+DATABASE: str = (
+    f"postgresql+asyncpg://{settings.DATABASE_USER}:\
 {settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:\
 {settings.DATABASE_PORT}/{settings.DATABASE_DB}"
 )
@@ -35,9 +36,20 @@ ASYNC_DB = {
 
 
 def get_engine() -> Engine:
-    """return db engine"""
-    return create_engine(DB, pool_size=5, echo=True)
+    """return async db engine"""
+
+    return create_async_engine(DATABASE, pool_size=5, echo=True)
 
 
-class MainBase(DeclarativeBase):
-    """Main orm database obj."""
+AsyncSessionLocal = sessionmaker(
+    bind=get_engine(), class_=AsyncSession, expire_on_commit=False
+)
+
+Base = declarative_base()
+
+
+async def get_session():
+    """Return async session."""
+
+    async with AsyncSessionLocal() as session:
+        yield session
