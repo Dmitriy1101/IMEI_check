@@ -7,10 +7,8 @@ from fastapi import APIRouter, Depends
 from fastapi_limiter.depends import RateLimiter
 
 from back.dataclass import IMEIInfo
-
-# from src_public_api.db import get_cost_of_storage
-# from src_public_api.db.bynary.requests import has_permission
-# from src_public_api.schemas import CostOfStorageMarketplace, TablePermission
+from back.db.bynary.request import has_permission
+from back.schema import AccessType
 from back.utils import header_key
 
 imei_check_router = APIRouter(prefix="/check-imei", tags=["check_imei"])
@@ -23,9 +21,9 @@ imei_check_router = APIRouter(prefix="/check-imei", tags=["check_imei"])
 async def imei_check(imei: int, authorization: str = Depends(header_key)) -> IMEIInfo:
     """Return marketplace cost of storage."""
 
-    # await has_permission(
-    #     token=authorization,
-    #     table_name=TablePermission.COST_OF_STORAGE,
-    #     code=marketplace.value,
-    # )
+    await has_permission(
+        token=authorization,
+        acsess_type=AccessType.IMEI_CHECK,
+        code="ALL",
+    )
     return IMEIInfo(imei="657657", data=0.01)

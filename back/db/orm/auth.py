@@ -32,7 +32,7 @@ class ApiToken(Base):
 
 
 class ApiPermissionCodes(Base):
-    """Table storing types of pi access parameters."""
+    """Table storing types of API access parameters."""
 
     __tablename__ = "api_permission_codes"
     __table_args__ = {"schema": settings.DB_SCHEMA}
@@ -64,13 +64,14 @@ class ApiPermissionToken(Base):
 
     token_hash = Column(
         LargeBinary,
-        ForeignKey("api_token.token_hash"),
+        ForeignKey(f"{settings.DB_SCHEMA}.api_token.token_hash"),
         primary_key=True,
         nullable=False,
     )
+
     permission_codes = Column(
         Integer,
-        ForeignKey("api_permission_codes.lable"),
+        ForeignKey(f"{settings.DB_SCHEMA}.api_permission_codes.lable"),
         primary_key=True,
         nullable=False,
     )

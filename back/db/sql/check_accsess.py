@@ -18,12 +18,12 @@ class AuthQuery:
     def insert_hash_key() -> str:
         """
         Add new hash token with account name in db query.
-            1: service_name, 2: token_hash
+            1: service_name, 2: token_hash, 3:created_at
         """
 
         return f"""
-        insert into {settings.DB_SCHEMA}.api_token (service_name, token_hash) 
-        values (%s, %s);
+        insert into {settings.DB_SCHEMA}.api_token (service_name, token_hash, created_at) 
+        values (%s, %s, %s);
         """
 
     @staticmethod

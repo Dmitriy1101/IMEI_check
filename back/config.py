@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     TOKEN_SANDBOX: str = os.environ.get("TOKEN_SANDBOX", "")
     TOKEN_LIVE: str = os.environ.get("TOKEN_LIVE", "")
-    DB_SCHEMA: str = os.environ.get("DB_SCHEMA", "backend_fastapi_test")
+    DB_SCHEMA: str = os.environ.get("DB_SCHEMA", "test_back")
 
     TEST_TOKEN: str = (
         "cf4gJ5Qovk2W0ZJ4zSth7SjweFsbfv7SNigImdzhVt3uue9bi3_UIyJPNtzNaEyJDHFaD6KYkHO-JMob"
@@ -57,7 +57,7 @@ class LocalSettings(Settings):
     DATABASE_USER: str = "dbuser"
     DATABASE_PASSWORD: str = "pass"
     DATABASE_HOST: str = "localhost"
-    DATABASE_PORT: int = 15432
+    DATABASE_PORT: int = "15432"
     DATABASE_DB: str = "dbname"
 
     # Redis
