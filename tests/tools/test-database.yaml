@@ -1,0 +1,10 @@
+services:
+  test_db:
+    image: postgres:16-alpine3.20
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=pass
+    restart: always
+    ports:
+      - "15432:5432"

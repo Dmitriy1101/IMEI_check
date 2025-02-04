@@ -1,0 +1,33 @@
+services:
+  public_api:
+    build: .
+    image: back/test_api:latest
+    container_name: TestAPI
+    env_file:
+      - ./.env
+    environment:
+      TYPE_ENV: docker
+    command: bash -c "alembic upgrade head && uvicorn asgi:app --host 0.0.0.0 --port 58485"
+    restart: always
+    ports:
+      - "58485:58485"
+    networks:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    restart: always
+    networks:
+      - redis
+
+networks:
+  redis:
+    name: redis
