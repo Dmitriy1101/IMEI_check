@@ -1,12 +1,11 @@
 """
-Endpoint '/api/cost_of_storage/{marketplace}' router
-cost_of_storage endpoints.
+Endpoint '/api/check-imei' router
 """
 
 from fastapi import APIRouter, Depends
 from fastapi_limiter.depends import RateLimiter
 
-from back.dataclass import IMEIInfoData
+from back.dataclass import IMEIInfoData, IMEIInput
 from back.db.bynary.request import has_permission
 from back.schema import AccessType
 from back.utils import IMEICheck, header_key
@@ -19,7 +18,7 @@ imei_check_router = APIRouter(prefix="/check-imei", tags=["check_imei"])
     dependencies=[Depends(RateLimiter(times=2, seconds=5))],
 )
 async def imei_check(
-    imei: int, authorization: str = Depends(header_key)
+    imei: str, authorization: str = Depends(header_key)
 ) -> IMEIInfoData:
     """Return live imei check result."""
 
@@ -28,4 +27,5 @@ async def imei_check(
         acsess_type=AccessType.IMEI_CHECK,
         code="ALL",
     )
-    return IMEIInfoData(data=IMEICheck().check_imei(imei=imei))
+    imei = IMEIInput(imei=imei)
+    return IMEIInfoData(data=IMEICheck().check_imei(imei=imei.imei))

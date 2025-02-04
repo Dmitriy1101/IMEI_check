@@ -15,4 +15,3 @@ RUN poetry config virtualenvs.in-project true --local && poetry install --only m
 COPY . ./
 
 ENV PATH="/usr/.venv/bin:$PATH"
-ENV PYTHONPATH="/usr/public_api:$PYTHONPATH"

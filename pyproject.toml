@@ -1,6 +1,6 @@
 [project]
 name = "imei-check"
-version = "0.1.0"
+version = "1.0.0"
 description = "test task 25.01.2025"
 authors = [
     {name = "Dmitriy Boyarinov",email = "boyar.d@yandex.ru"}

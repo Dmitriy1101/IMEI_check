@@ -1,0 +1,10 @@
+services:
+  tester_bot:
+    build: 
+      context: .
+      no_cache: true 
+    container_name: BotTester
+    env_file:
+      - ./bot.env
+    command: "python main.py"
+    restart: always

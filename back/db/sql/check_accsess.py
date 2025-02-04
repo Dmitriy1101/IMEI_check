@@ -29,7 +29,7 @@ class AuthQuery:
     @staticmethod
     def insert_new_permission() -> str:
         """
-        Use service name, table name and marketplace name for creation new permission.
+        Use service name, endpoint name and parameter name for creation new permission.
             1: service_name, 2: endpoint_name, 3: parameter
         """
 
@@ -46,6 +46,7 @@ class AuthQuery:
     @staticmethod
     def select_hash_token() -> str:
         """
+        psycopg2-binary request,
         Find tokens by permission patams.
             1: endpoint_name, 2: parameter
         """
@@ -61,7 +62,7 @@ class AuthQuery:
     def check_permission() -> str:
         """
         asyncpg request.
-        Check permission by hash token and marketplace. If permission granted return tablename.
+        Search token_hash by token_id, endpoint_name and parameter.
             1: endpoint_name, 2: parameter, 3: token_id
         """
 
