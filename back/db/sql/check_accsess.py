@@ -18,12 +18,12 @@ class AuthQuery:
     def insert_hash_key() -> str:
         """
         Add new hash token with account name in db query.
-            1: service_name, 2: token_hash, 3:created_at
+            1: service_name, 2: token_id , 3: token_hash, 4:created_at
         """
 
         return f"""
-        insert into {settings.DB_SCHEMA}.api_token (service_name, token_hash, created_at) 
-        values (%s, %s, %s);
+        insert into {settings.DB_SCHEMA}.api_token (service_name, token_id, token_hash, created_at) 
+        values (%s, %s, %s, %s);
         """
 
     @staticmethod
@@ -34,10 +34,10 @@ class AuthQuery:
         """
 
         return f"""
-        insert into {settings.DB_SCHEMA}.api_permission_token (token_hash, permission_codes)
+        insert into {settings.DB_SCHEMA}.api_permission_token (token_id, permission_codes)
         values
         (
-        (select n.token_hash from {settings.DB_SCHEMA}.api_token n where n.service_name = %s), 
+        (select n.token_id from {settings.DB_SCHEMA}.api_token n where n.service_name = %s), 
         (select apc.lable from {settings.DB_SCHEMA}.api_permission_codes apc
         where apc.endpoint_name = %s and apc.parameter = %s)
         );
@@ -46,13 +46,13 @@ class AuthQuery:
     @staticmethod
     def select_hash_token() -> str:
         """
-        Find tokens by permission.
+        Find tokens by permission patams.
             1: endpoint_name, 2: parameter
         """
 
         return f"""
         select at2.token_hash from {settings.DB_SCHEMA}.api_token at2 
-        left join {settings.DB_SCHEMA}.api_permission_token apt on apt.token_hash = at2.token_hash 
+        left join {settings.DB_SCHEMA}.api_permission_token apt on apt.token_id = at2.token_id 
         left join {settings.DB_SCHEMA}.api_permission_codes apc on apc.lable = apt.permission_codes 
         where apc.endpoint_name = %s and apc.parameter = %s;
         """
@@ -62,12 +62,12 @@ class AuthQuery:
         """
         asyncpg request.
         Check permission by hash token and marketplace. If permission granted return tablename.
-            1: endpoint_name, 2: parameter, 3: token_hash
+            1: endpoint_name, 2: parameter, 3: token_id
         """
 
         return f"""
-        select apc.endpoint_name from {settings.DB_SCHEMA}.api_token at2 
-        left join {settings.DB_SCHEMA}.api_permission_token apt on apt.token_hash = at2.token_hash 
+        select at2.token_hash, at2.service_name from {settings.DB_SCHEMA}.api_token at2 
+        left join {settings.DB_SCHEMA}.api_permission_token apt on apt.token_id = at2.token_id 
         left join {settings.DB_SCHEMA}.api_permission_codes apc on apc.lable = apt.permission_codes 
-        where apc.endpoint_name = $1 and apc.parameter = $2 and apt.token_hash = $3;
+        where apc.endpoint_name = $1 and apc.parameter = $2 and apt.token_id = $3;
         """

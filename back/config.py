@@ -1,5 +1,5 @@
 """
-Main settings object "settings" is here.
+Main settings object, "settings" is here.
 """
 
 import os
@@ -35,7 +35,7 @@ class Settings(BaseSettings):
 
 
 class DockerSettings(Settings):
-    """Docker"""
+    """Docker settings"""
 
     # PostgreSQL
     DATABASE_USER: str = os.environ.get("DB_USER")

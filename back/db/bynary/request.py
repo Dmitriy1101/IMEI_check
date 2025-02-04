@@ -1,13 +1,14 @@
-import hashlib
 import secrets
 from datetime import datetime
 from typing import Any
 
+import bcrypt
 from fastapi import HTTPException
 
 from back.config import settings
 from back.db.decorator import async_bynary_conn, bynary_conn
 from back.db.sql import AuthQuery
+from back.db.utils import generate_token_id
 from back.logging import logger
 from back.schema import AccessType
 
@@ -35,15 +36,14 @@ async def has_permission(
     Raise HTTPException if acsess denied.
     """
     logger.info("Check permissions.")
-    token_hash: bytes = hashlib.sha256(token.encode()).digest()
     query: str = AuthQuery.check_permission()
-    table: str = acsess_type.value
-    data = await __conn.fetch(query, table, code, token_hash)
-    if len(data) == 1:
-        logger.info(data)
-        return dict(data[0])["endpoint_name"] == table
-    else:
-        raise HTTPException(status_code=403, detail="Acsess denied...")
+    endpoint: str = acsess_type.value
+    data = await __conn.fetch(query, endpoint, code, generate_token_id(token=token))
+    for d in data:
+        if bcrypt.checkpw(token.encode(), d[0]):
+            logger.info("Service %s is here.", d[1])
+            return True
+    raise HTTPException(status_code=403, detail="Acsess denied...")
 
 
 @bynary_conn
@@ -64,7 +64,13 @@ def gen_key(service_name: str, __conn=None) -> str:
     query: str = AuthQuery.insert_hash_key()
     cur = __conn.cursor()
     cur.execute(
-        query, (service_name, hashlib.sha256(key.encode()).digest(), datetime.now())
+        query,
+        (
+            service_name,
+            generate_token_id(token=key),
+            bcrypt.hashpw(key.encode(), bcrypt.gensalt()),
+            datetime.utcnow(),
+        ),
     )
     __conn.commit()
     cur.close()

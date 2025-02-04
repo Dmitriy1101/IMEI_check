@@ -3,7 +3,6 @@ Main aendpoints file.
 """
 
 from contextlib import asynccontextmanager
-from logging import Logger, getLogger
 
 import redis.asyncio as redis
 from fastapi import FastAPI
@@ -11,7 +10,7 @@ from fastapi_limiter import FastAPILimiter
 
 from back.config import settings
 from back.logging import logger
-from back.routers import imei_check_router
+from back.routers import imei_check_router, imei_check_sandbox_router
 
 
 @asynccontextmanager
@@ -31,3 +30,4 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(imei_check_router, prefix="/api")
+app.include_router(imei_check_sandbox_router, prefix="/api")

@@ -1,7 +1,7 @@
 """first tables
 
 Revision ID: cc8ac5d2bfd7
-Revises: 
+Revises:
 Create Date: 2025-02-01 19:18:29.311699
 
 """
@@ -37,26 +37,27 @@ def upgrade() -> None:
     op.create_table(
         "api_token",
         sa.Column("service_name", sa.String(length=40), nullable=False),
+        sa.Column("token_id", sa.String(), nullable=False),
         sa.Column("token_hash", sa.LargeBinary(), nullable=False),
         sa.Column("definition", sa.Text(), nullable=True),
         sa.Column("created_at", sa.TIMESTAMP(), nullable=True),
-        sa.PrimaryKeyConstraint("token_hash"),
+        sa.PrimaryKeyConstraint("token_id"),
         sa.UniqueConstraint("service_name"),
         schema=settings.DB_SCHEMA,
     )
     op.create_table(
         "api_permission_token",
-        sa.Column("token_hash", sa.LargeBinary(), nullable=False),
+        sa.Column("token_id", sa.String(), nullable=False),
         sa.Column("permission_codes", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["permission_codes"],
             [f"{settings.DB_SCHEMA}.api_permission_codes.lable"],
         ),
         sa.ForeignKeyConstraint(
-            ["token_hash"],
-            [f"{settings.DB_SCHEMA}.api_token.token_hash"],
+            ["token_id"],
+            [f"{settings.DB_SCHEMA}.api_token.token_id"],
         ),
-        sa.PrimaryKeyConstraint("token_hash", "permission_codes"),
+        sa.PrimaryKeyConstraint("token_id", "permission_codes"),
         schema=settings.DB_SCHEMA,
     )
     # ### end Alembic commands ###

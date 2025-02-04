@@ -24,7 +24,8 @@ class ApiToken(Base):
     __table_args__ = {"schema": settings.DB_SCHEMA}
 
     service_name = Column(String(40), nullable=False, unique=True)
-    token_hash = Column(LargeBinary, primary_key=True, nullable=False)
+    token_id = Column(String, nullable=False, primary_key=True)
+    token_hash = Column(LargeBinary, nullable=False)
     definition = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP, default=datetime.now, nullable=True)
 
@@ -62,9 +63,9 @@ class ApiPermissionToken(Base):
     __tablename__ = "api_permission_token"
     __table_args__ = {"schema": settings.DB_SCHEMA}
 
-    token_hash = Column(
+    token_id = Column(
         LargeBinary,
-        ForeignKey(f"{settings.DB_SCHEMA}.api_token.token_hash"),
+        ForeignKey(f"{settings.DB_SCHEMA}.api_token.token_id"),
         primary_key=True,
         nullable=False,
     )
