@@ -41,7 +41,7 @@ async def has_permission(
     data = await __conn.fetch(query, endpoint, code, generate_token_id(token=token))
     for d in data:
         if bcrypt.checkpw(token.encode(), d[0]):
-            logger.info("Service %s is here.", d[1])
+            logger.info("Service '%s' is here.", d[1])
             return True
     raise HTTPException(status_code=403, detail="Acsess denied...")
 
